@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    
+    <title>Archives: 2020/10 | 白茶馆</title>
+    <meta name="description" content="succlz13's blog."/>
+    <meta name="keywords" content="hexo, blog"/>
+    <meta name="HandheldFriendly" content="True"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="google-site-verification" content=""/>
+    <meta name="baidu-site-verification" content=""/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="referrer" content="no-referrer" />
+    <meta property="og:type" content="website">
+<meta property="og:title" content="白茶馆">
+<meta property="og:url" content="https://succlz123.github.io/blog/archives/2020/10/index.html">
+<meta property="og:site_name" content="白茶馆">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="succlz123">
+<meta name="twitter:card" content="summary">
+    
+
+    <!-- Favicon -->
+    
+
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,700" rel="stylesheet">
+
+    
+<link rel="stylesheet" href="/blog/style.css">
+
+    <script>
+      function setLoadingBarProgress(num) {
+        document.getElementById('loading-bar').style.width = num + "%";
+      }
+    </script>
+
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+
+<body>
+
+<div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+
+<script>setLoadingBarProgress(20)</script>
+
+<div id="site-wrapper">
+
+    <header id="header">
+    <div id="header-wrapper" class="clearfix">
+        <a id="logo" href="/blog/">
+            <img src="/blog/img/logo.png" />
+            <span id="site-desc">
+                succlz13
+            </span>
+        </a>
+        <button id="site-nav-switch">
+            <span>
+                <svg height="24px" viewBox="0 -53 384 384" width="24px" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="m368 154.667969h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0" />
+                    <path
+                        d="m368 32h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0" />
+                    <path
+                        d="m368 277.332031h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0" />
+                    </svg>
+            </span>
+        </button>
+    </div>
+</header>
+    <script>setLoadingBarProgress(40);</script>
+
+    <main id="main" role="main">
+        
+    
+
+
+  <section class="page-header archive">
+    <h1>- <span>2020.10</span> -</h1>
+  </section>
+
+
+
+
+<section class="post-list">
+  
+    <article class="post ">
+
+    
+        <h4 class="title">
+            <a href="/blog/2020/10/25/yuque/APK%20%E4%B8%AD%E7%9A%84%20CERT.RSA%20%E5%92%8C%20CERT.SF%20%E6%96%87%E4%BB%B6%E4%B8%A2%E5%A4%B1/">
+                APK 中的 CERT.RSA 和 CERT.SF 文件丢失
+            </a>
+        </h4>
+    
+    <time>
+        10月 25, 2020
+    </time>
+    <section class="content">
+        <h2><span id="起因">起因</span></h2><p>前几天有应用需要发布上传市场, 然后在运营上传百度, 魅族, 小米市场时, 碰到说 apk 没有被签名. 但是这个问题很神奇, 为什么其他市场都正常呢, 而且 apk 可以正常的被安装到手机上去, 所以不可能没有签名.<br>解开 apk 文件后发现, 确实没有 *.RSA 的证书文件. 搜索半天发现也有人问过这个问题, 但是没人给出解答<br><a target="_blank" rel="noopener" href="https://android.stackexchange.com/questions/218187/why-cant-i-find-a-cert-rsa-file-in-my-android-apk">https://android.stackexchange.com/questions/218187/why-cant-i-find-a-cert-rsa-file-in-my-android-apk</a><br><a target="_blank" rel="noopener" href="https://github.com/flutter/flutter/issues/58758">https://github.com/flutter/flutter/issues/58758</a></p>
+<h2><span id="研究">研究</span></h2><ul>
+<li>项目中的 build.gradle 看了半天也没发现有问题</li>
+<li>用 gradle 的 signingReport 命令也是能打出应用用的证书信息</li>
+<li>翻来覆去在 google developer 文档里面找, 也没有个头绪</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://developer.android.com/studio/command-line/apksigner">https://developer.android.com/studio/command-line/apksigner</a><br><a target="_blank" rel="noopener" href="https://developer.android.com/studio/build/build-variants#signing">https://developer.android.com/studio/build/build-variants#signing</a><br><a target="_blank" rel="noopener" href="https://developer.android.com/studio/publish/app-signing?hl=zh-cn#release-mode">https://developer.android.com/studio/publish/app-signing?hl=zh-cn#release-mode</a><br><a target="_blank" rel="noopener" href="https://android-developers.googleblog.com/2016/11/understanding-apk-packaging-in-android-studio-2-2.html">https://android-developers.googleblog.com/2016/11/understanding-apk-packaging-in-android-studio-2-2.html</a><br><a target="_blank" rel="noopener" href="https://developer.android.com/about/versions/nougat/android-7.0?hl=th#apk_signature_v2">https://developer.android.com/about/versions/nougat/android-7.0?hl=th#apk_signature_v2</a></p>
+<h2><span id="解决">解决</span></h2><p>在我翻找资料时, 看到有如下写法, 所以尝试吧 v1 v2 都打开后, 打包出的 apk 里, 终于有 cert 文件了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">APK Signature Scheme v2</span><br><span class="line"></span><br><span class="line">    signingConfigs &#123;</span><br><span class="line">      release &#123;</span><br><span class="line">        <span class="function">storeFile <span class="title">file</span><span class="params">(<span class="string">&quot;myreleasekey.keystore&quot;</span>)</span></span></span><br><span class="line"><span class="function">        storePassword &quot;password&quot;</span></span><br><span class="line"><span class="function">        keyAlias &quot;MyReleaseKey&quot;</span></span><br><span class="line"><span class="function">        keyPassword &quot;password&quot;</span></span><br><span class="line"><span class="function">        v1SigningEnabled <span class="keyword">true</span></span></span><br><span class="line"><span class="function">        V2SigningEnabled <span class="keyword">false</span></span></span><br><span class="line"><span class="function">      &#125;</span></span><br><span class="line"><span class="function">    &#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2><span id="为什么会没有-cert-文件">为什么会没有 CERT 文件</span></h2><p>在我加上 flag 解决没有 cert 文件问题后, 我思考半天想到是不是证书签名是否被打包到 apk 的二进制文件里面去了, 所以看不到.<br>同时我去 google 的 issuetracker 里找到了这个问题 <a target="_blank" rel="noopener" href="https://issuetracker.google.com/issues/127290682">https://issuetracker.google.com/issues/127290682</a><br>按照官方人员的回答, 我理解是打包签名出现问题是因为项目的 mini sdk version 大于了 23 , 在自动 build 的情况下, 直接忽略了 v1 签名. 而 v2 签名不需要 cert 文件, 当你用 keytool -printcert 去检查时, 当然会提示</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Unauthorized modifications to <span class="keyword">this</span> JAR entry will not be detected. Delete or move the entry outside of META-INF/</span><br></pre></td></tr></table></figure>
+
+<p>除非用 Android sdk 下的 apk signature 工具检查</p>
+<h3><span id="手动">手动</span></h3><p>手动通过 Android Studio 的 build 打包时, 我们通常会同时勾选 v1 和 v2 签名, 如果我们只勾选 v2, 那么在 apk 里其实也是找不到 cert 文件的</p>
+<h3><span id="自动">自动</span></h3><p>目前有 v1SigningEnabled 和 v2SigningEnabled 2 个 flag<br>他们会产生四种结果：</p>
+<ul>
+<li>v1 false &amp; v2 false: 打包出来的 apk 就是未签名的应用，无法直接安装</li>
+<li>v1 true &amp; v2 false: apk 仅使用 v1 签名，兼容全部版本平台</li>
+<li>v1 false &amp; v2 true: apk 仅使用 v2 签名，应用仅可在 Android 版本大于等于 7.0 以上安装，在 7.0 以下无法安装</li>
+<li>v1 true &amp; v2 true: apk 同时使用 v1 v2 签名，兼容全部版本平台</li>
+</ul>
+<p>当我们设置 mini sdk version 大于 23, 也就是最小版本大于 Android 7 时, 那么其实 gradle 自动判断不需要 v1 签名, 这是很合情合理的. 最后问题就出在国内市场还有只检查 v1 签名的存在.</p>
+
+
+        
+
+        
+
+    </section>
+</article>
+  
+</section>
+
+
+
+        <script>setLoadingBarProgress(60);</script>
+    </main>
+
+    <footer id="footer" class="clearfix">
+
+    
+
+    <div class="social-wrapper">
+        
+            
+                <a href="https://github.com/succlz123" class="social github"
+                   target="_blank" rel="external">
+                    <span class="icon icon-github"></span>
+                </a>
+            
+                <a href="/atom.xml" class="social rss"
+                   target="_blank" rel="external">
+                    <span class="icon icon-rss"></span>
+                </a>
+            
+        
+    </div>
+
+    <div class="theme-by">Theme <span class="codename">Memory</span> designed by <a href="https://artifact.me/"
+                                                                                    target="_blank">Art Chen</a>.
+    </div>
+    <div>&copy; <a href="/blog/">白茶馆</a></div>
+
+</footer>
+
+
+    <script>setLoadingBarProgress(80);</script>
+    <div class="overlay"></div>
+</div>
+
+<div class="site-sidebar" id="site-sidebar">
+
+    
+
+    <div class="sidebar-switch clearfix "
+         style="display: none">
+        <a class="dark-btn active" data-toggle="toc">
+            <span class="icon icon-list"></span>
+            <span class="text">Index</span>
+        </a>
+        <a class="dark-btn" data-toggle="bio">
+            <span class="icon icon-person"></span>
+            <span class="text">Bio</span>
+        </a>
+    </div>
+
+    <div class="site-toc "
+         style="display: none">
+        
+            <div class="no-index">No Index</div>
+        
+    </div>
+
+    <div class="site-bio show"
+         style="display: block">
+
+        <div class="about-me clearfix">
+            <div class="avatar">
+                <img src="/blog/img/avatar.png"/>
+            </div>
+            <div class="info">
+                <a class="name dark-btn" href="/blog/">
+                    succlz123
+                </a>
+            </div>
+            <div class="info">
+                <span class="item desc">
+                    
+                </span>
+            </div>
+        </div>
+
+        <div class="menu section">
+            <ul class="clearfix">
+                
+                    <li class="left">
+                        <a href="/blog/about"
+                           onfocus="this.blur();"
+                           class="nav-about dark-btn block">
+                            About
+                        </a>
+                    </li>
+                
+                    <li class="right">
+                        <a href="/blog/archives"
+                           onfocus="this.blur();"
+                           class="nav-archives dark-btn block">
+                            Archives
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="shortcuts">
+        <a href="#header" class="top window-nav dark-btn" id="go-top">
+            <span class="icon icon-chevron-thin-up"></span>
+        </a>
+        <a class="close dark-btn" id="sidebar-close">
+            <span class="icon icon-close"></span>
+        </a>
+        <a href="#footer" class="top window-nav dark-btn" id="go-bottom">
+            <span class="icon icon-chevron-thin-down"></span>
+        </a>
+    </div>
+
+</div>
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script>window.jQuery || document.write('<script src="/blog/js/jquery.min.js"><\/script>')</script>
+
+
+<script src="/blog/js/jquery.fitvids.js"></script>
+
+<script>
+  var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+  var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+  var ALGOLIA_API_KEY = "";
+  var ALGOLIA_APP_ID = "";
+  var ALGOLIA_INDEX_NAME = "";
+  var AZURE_SERVICE_NAME = "";
+  var AZURE_INDEX_NAME = "";
+  var AZURE_QUERY_KEY = "";
+  var SEARCH_SERVICE = "";
+  var universalSearchConfig = {};
+  if (SEARCH_SERVICE === 'google') {
+    universalSearchConfig = {
+      searchService: SEARCH_SERVICE,
+      apiKey: GOOGLE_CUSTOM_SEARCH_API_KEY,
+      engineId: GOOGLE_CUSTOM_SEARCH_ENGINE_ID,
+      imagePath: "/img/"
+    };
+  } else if (SEARCH_SERVICE === 'algolia') {
+    universalSearchConfig = {
+      searchService: SEARCH_SERVICE,
+      apiKey: ALGOLIA_API_KEY,
+      appId: ALGOLIA_APP_ID,
+      indexName: ALGOLIA_INDEX_NAME,
+      imagePath: "/img/"
+    };
+  } else if (SEARCH_SERVICE === 'azure') {
+    universalSearchConfig = {
+      searchService: SEARCH_SERVICE,
+      serviceName: AZURE_SERVICE_NAME,
+      indexName: AZURE_INDEX_NAME,
+      apiKey: AZURE_QUERY_KEY,
+      imagePath: "/img/"
+    };
+  }
+</script>
+
+<script src="/blog/js/app.js"></script>
+
+
+<script src="/blog/js/search.js"></script>
+
+
+
+
+
+<script>setLoadingBarProgress(100);</script>
+
+</body>
+</html>

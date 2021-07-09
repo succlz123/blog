@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    
+    <title>Kotlin 使用小结 | 白茶馆</title>
+    <meta name="description" content="succlz13's blog."/>
+    <meta name="keywords" content="hexo, blog"/>
+    <meta name="HandheldFriendly" content="True"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="google-site-verification" content=""/>
+    <meta name="baidu-site-verification" content=""/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="referrer" content="no-referrer" />
+    <meta name="description" content="没事总结下 优点 空安全 -   内部实现 - 抛异常 可以使用函数式编程 - 语法糖, 集合 高阶函数写的舒服 - apply let map - 实现逻辑 内部类 语法糖(lambda) 集合中映射操作符map 转换 flatMap 铺平并转换 扩展方法 -   内部实现 - 通过生成静态类和静态方法 懒惰计算 lazy -   帮你生成一个, 你用到的是它重载了 get value， 函数柯">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kotlin 使用小结">
+<meta property="og:url" content="https://succlz123.github.io/blog/2020/09/21/yuque/Kotlin%20%E4%BD%BF%E7%94%A8%E5%B0%8F%E7%BB%93/index.html">
+<meta property="og:site_name" content="白茶馆">
+<meta property="og:description" content="没事总结下 优点 空安全 -   内部实现 - 抛异常 可以使用函数式编程 - 语法糖, 集合 高阶函数写的舒服 - apply let map - 实现逻辑 内部类 语法糖(lambda) 集合中映射操作符map 转换 flatMap 铺平并转换 扩展方法 -   内部实现 - 通过生成静态类和静态方法 懒惰计算 lazy -   帮你生成一个, 你用到的是它重载了 get value， 函数柯">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-09-21T05:42:42.000Z">
+<meta property="article:modified_time" content="2021-07-09T04:33:19.692Z">
+<meta property="article:author" content="succlz123">
+<meta name="twitter:card" content="summary">
+    
+
+    <!-- Favicon -->
+    
+
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,700" rel="stylesheet">
+
+    
+<link rel="stylesheet" href="/blog/style.css">
+
+    <script>
+      function setLoadingBarProgress(num) {
+        document.getElementById('loading-bar').style.width = num + "%";
+      }
+    </script>
+
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+
+<body>
+
+<div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+
+<script>setLoadingBarProgress(20)</script>
+
+<div id="site-wrapper">
+
+    <header id="header">
+    <div id="header-wrapper" class="clearfix">
+        <a id="logo" href="/blog/">
+            <img src="/blog/img/logo.png" />
+            <span id="site-desc">
+                succlz13
+            </span>
+        </a>
+        <button id="site-nav-switch">
+            <span>
+                <svg height="24px" viewBox="0 -53 384 384" width="24px" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="m368 154.667969h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0" />
+                    <path
+                        d="m368 32h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0" />
+                    <path
+                        d="m368 277.332031h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0" />
+                    </svg>
+            </span>
+        </button>
+    </div>
+</header>
+    <script>setLoadingBarProgress(40);</script>
+
+    <main id="main" role="main">
+        <article id="post-yuque/Kotlin 使用小结"
+         class="post article white-box article-type-post"
+         itemscope itemprop="blogPost">
+    <h2 class="title">
+        <a href="/blog/2020/09/21/yuque/Kotlin%20%E4%BD%BF%E7%94%A8%E5%B0%8F%E7%BB%93/">
+            Kotlin 使用小结
+        </a>
+    </h2>
+    <time>
+        9月 21, 2020
+    </time>
+    <section class="content">
+        <div class="article-entry" itemprop="articleBody">
+            <p>没事总结下</p>
+<h2><span id="优点">优点</span></h2><ul>
+<li>空安全 -   内部实现 - 抛异常</li>
+<li>可以使用函数式编程 - 语法糖, 集合 高阶函数写的舒服 - apply let map - 实现逻辑 内部类 语法糖(lambda)</li>
+<li>集合中映射操作符<br>map 转换 flatMap 铺平并转换</li>
+<li>扩展方法 -   内部实现 - 通过生成静态类和静态方法</li>
+<li>懒惰计算 lazy -   帮你生成一个, 你用到的是它重载了 get value，</li>
+<li>函数柯里化</li>
+<li>函数参数默认值</li>
+<li>尾递归 - 其实就是循环展开</li>
+<li>inline 关键字, 自动内联提高性能</li>
+<li>reified 关键字, 可以拿到泛型的 k class 信息,  kclass 就是 kotlin 对 java class 的一层封装 - 核心是编译阶段生成的 metadata 注解, 里面包括 class 很多信息<ul>
+<li>Kotlin 编译器会将 reified 方法<code>asType</code>内联(inline)到调用的地方(call-site)</li>
+<li>方法被内联到调用的地方后，泛型 T 会被替换成具体的类型</li>
+</ul>
+</li>
+</ul>
+<p>所以 <strong>reified 使得泛型的方法假装在运行时能够获取泛型的类信息</strong> ,   而且 基于 inline 的  reified 是会          智能根据顺序 内联相应代码</p>
+<ul>
+<li>ReadOnlyProperty - 一个接口 kotlin 的 delegate 和 observe 也都是基于这些做的 复写了 setValue getValue 方法 - Kproperty 的 getValue 功能 其实就是<ol>
+<li>比如 Kproperty1 的某个实现类 (在 class 中的 var 变量, 也就是带 receiver , 不可变就是 val 的变量引用) MutablePropertyReference1,</li>
+<li>每当我们使用一次  class::xx 变量时, 会生成一个  helper class  xx$   继承自 MutablePropertyReference1</li>
+<li>然后编译器 自动帮我们, 实现了他的各自接口, 没有反射, 本质就是 编译器自动生成   一个 帮助类, 只是一种 字节码生成功能</li>
+</ol>
+</li>
+<li>KClasses 扩展了许多跟反射相关的方法，是 kotlin 的反射中类主力输出。<br>Java 是 class</li>
+<li>可见性<ol>
+<li>默认公开 public</li>
+<li>java 有 <code>hide</code>   kotlin 有 internal 包内可见<br>编译时无法跨包调用，但是运行时 java 还是可以的，但是可以通过 <a href="/JvmName">@JvmName </a> 或者 ``符号来生成 Java 不能调用的方法名字</li>
+<li>protected<ul>
+<li>Java 中 <code>protected</code> 表示包内可见 + 子类可见。</li>
+<li>Kotlin 中 <code>protected</code> 表示 <code>private</code> + 子类可见。</li>
+</ul>
+</li>
+<li>privated<ul>
+<li>Java 中，外部类可以访问内部类的 <code>private</code> 变量</li>
+<li>Kotlin 中，外部类不可以访问内部类的 <code>private</code> 变量</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>receiver - 实现 DSL 功能</li>
+<li>密封类 - 子类类型的限定<br>使用 when 表达式 的时候，能够验证语句覆盖了所有情况，就不需要为该语句再添加一个 else 子句了<br>sealed class 在意 class 类型,  enum 在意 数据</li>
+<li>尾随逗号 - 1.4</li>
+</ul>
+<h2><span id="缺点-or-不方便">缺点 or 不方便</span></h2><ul>
+<li>sam 只能对 java 接口起效果，SAM 转换，即 Single Abstract Method Conversions，就是对于<strong>只有单个非默认抽象方法接口</strong>的转换。<ol>
+<li>官方的解释是 Kotlin 本身已经有了<code>函数类型</code>和<code>高阶函数</code>等支持，所以不需要了再去转换了。</li>
+<li>只支持接口，不支持抽象类</li>
+<li>某个版本之后已经可以支持 kt 的单接口</li>
+</ol>
+</li>
+<li>默认 final 的 class 和 method，导致单元测试时的 mock 会有问题, 需要加注解 on Visible</li>
+<li>默认的空类型和非空类型，mock 时 也会有问题，mockito 返回的 any 对象是有可能是空的，需要专门引入 Mockito-Kotlin 的库。</li>
+<li>koltin ktlint 插件</li>
+<li>data class 没有默认的构造器，反射时需要<br>使用 Kotlin 官方为我们提供了两个插件</li>
+<li>使用 reified 处理后的 kotlin 方法无法被 java 代码调用。</li>
+<li>扩展方法  java 和 kt 调用<br>java 调用 泛型擦除后, 会冲突, 因为方法签名一样,   可以通过加  <a href="/JvmName">@JvmName </a> 注解 来起 另外一个名字, 或者干脆换名字<br>kt 里没关系, 因为编译器能区别</li>
+<li>自动生成 get set 与 fun getx 冲突<br>@JvmName(“getxxx”) 起个别名</li>
+<li>各种注解<br><code>JvmField</code>   不要生成 getter/setter 并将其作为公开字段（public）<br><code>JvmName</code> 用注解名字替换<br><code>JvmMultifileClass</code> 生成一个多文件类，该文件具有在此文件中声明的顶级函数和属性作为其中的一部分 就是最后合并到一个 clas 里<br><code>JvmOverloads</code>   默认参数值的重载<br><code>Strictfp</code> 浮点数精度控制<br><code>Synchronized</code> <code>Volatile</code> <code>Transient</code><br><code>JvmDefault</code><br>kt 的默认 interface 默认方法是通过生成 静态内部类 DefaultImpls 实现<br>这样与 java 互操作就 看着有点奇怪, 加这个注解, 需要 1.8 +  <code>Xjvm-default=enable</code> 开启<br>因为 java8 通过在 方法前加 default 可以支持 接口方法, 最后 kt 字节码 就是 java8 样子了<br>还可以用  1.8 + <code>-Xjvm-default=compatibility</code> 开启兼容模式, 这样没加就是默认, 加了就是新的, 然后 没加的   静态方法就变成 调用 他自己的  default 方法</li>
+<li>stb 自带 Pair 或 Triple</li>
+<li>asType 快捷转换</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(charSequence as? String)?.length</span><br><span class="line">charSequence?.asType&lt;String&gt;()?.length</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>reified - 具体化<ol>
+<li>在泛型类型前面增加 reified</li>
+<li>在方法前面增加 inline（必需的）</li>
+</ol>
+</li>
+<li><a href="/file">@file </a> 注解<br><a href="/file">@file </a> JvmName(“xxx”) - 如果 重名冲突 可以 JvmMultifileClass 合到一起</li>
+</ul>
+<h2><span id="陷阱">陷阱</span></h2><ul>
+<li>getset 语法糖会默认生成很多 get set 方法，通常来说 kotlin 的代码会比 java 少很多。但是这个语法糖就有可能导致你的方法数量爆炸。<br>可以通过 jvmfiled 注解避免。</li>
+<li><strong>伴生对象</strong>的开销，非 const 的私有伴生对象，如果我们给他弄个 get set 方法，会生成很脏的代码，访问变量需要经过 4 个静态方法<ul>
+<li>JvmField 避免</li>
+<li>加 const</li>
+</ul>
+</li>
+<li><strong>lazy()委托属性</strong> 就是帮你包装下<br><code>lazy()</code>委托属性可以用于只读属性的惰性加载，但是在使用<code>lazy()</code>时经常被忽视的地方就是有一个可选的 model 参数：lazy()<code>默认情况下会指定</code>LazyThreadSafetyMode.SYNCHRONIZED，不必要的性能开销。</li>
+<li>基本类型数组的拆装箱<br>在 Kotlin 中有 3 种数组类型：<ul>
+<li><code>IntArray</code>，<code>FloatArray</code> - 被编译成<code>int[]</code>，<code>float[]</code></li>
+<li><code>Array</code>：非空对象数组 <code>Array&lt;Int&gt;</code> - 被编译 new Integer[]{}</li>
+<li><code>Array</code>：可空对象数组 <code>Array&lt;Int?&gt;</code> - 被编译 new Integer[]{}</li>
+</ul>
+</li>
+<li>Kotlin 提供了<code>downTo</code>、<code>step</code>、<code>until</code>、  <code>reversed</code>等函数来帮助开发者更简单的使用 for 循环，如果单一的使用这些函数确实是方便简洁又高效，但要是将其中两个结合呢？<br>导致多个 IntProgression 对象的创建</li>
+<li>反射慢 , kotlin 比 java 多了很多反射信息, 所以特地弄了个 @metaData 所以慢很多, 还需要反射库 2.5M 混淆后 500KB</li>
+</ul>
+<h2><span id="140">1.40</span></h2><ol>
+<li>参数列表最后的逗号</li>
+<li>kotlin 也可以有 asm</li>
+<li>更智能的 类型推导</li>
+</ol>
+<h2><span id="写的时候的注意">写的时候的注意</span></h2><ul>
+<li>使用 inline 修饰高阶函数（参数为函数时）</li>
+<li>把函数参数尽可能放到最后</li>
+<li>尽可能使用只读集合</li>
+<li>使用 lateinit 处理无法再构造函数初始化的变量</li>
+<li>善用 Data class 的 copy 方法</li>
+<li>针对函数类型和集合使用 typealias  A 里 尔 s</li>
+<li>使用含义更加清晰的 substringBefore 和 substringAfter</li>
+<li>巧用 Kotlin 反射实现按值取名，调试做到多快好省</li>
+</ul>
+
+        </div>
+        <div class="article-tags tags">
+            
+        </div>
+    </section>
+</article>
+
+
+
+
+
+        <script>setLoadingBarProgress(60);</script>
+    </main>
+
+    <footer id="footer" class="clearfix">
+
+    
+
+    <div class="social-wrapper">
+        
+            
+                <a href="https://github.com/succlz123" class="social github"
+                   target="_blank" rel="external">
+                    <span class="icon icon-github"></span>
+                </a>
+            
+                <a href="/atom.xml" class="social rss"
+                   target="_blank" rel="external">
+                    <span class="icon icon-rss"></span>
+                </a>
+            
+        
+    </div>
+
+    <div class="theme-by">Theme <span class="codename">Memory</span> designed by <a href="https://artifact.me/"
+                                                                                    target="_blank">Art Chen</a>.
+    </div>
+    <div>&copy; <a href="/blog/">白茶馆</a></div>
+
+</footer>
+
+
+    <script>setLoadingBarProgress(80);</script>
+    <div class="overlay"></div>
+</div>
+
+<div class="site-sidebar" id="site-sidebar">
+
+    
+
+    <div class="sidebar-switch clearfix "
+         style="display: none">
+        <a class="dark-btn active" data-toggle="toc">
+            <span class="icon icon-list"></span>
+            <span class="text">Index</span>
+        </a>
+        <a class="dark-btn" data-toggle="bio">
+            <span class="icon icon-person"></span>
+            <span class="text">Bio</span>
+        </a>
+    </div>
+
+    <div class="site-toc "
+         style="display: none">
+        
+            <div class="no-index">No Index</div>
+        
+    </div>
+
+    <div class="site-bio show"
+         style="display: block">
+
+        <div class="about-me clearfix">
+            <div class="avatar">
+                <img src="/blog/img/avatar.png"/>
+            </div>
+            <div class="info">
+                <a class="name dark-btn" href="/blog/">
+                    succlz123
+                </a>
+            </div>
+            <div class="info">
+                <span class="item desc">
+                    
+                </span>
+            </div>
+        </div>
+
+        <div class="menu section">
+            <ul class="clearfix">
+                
+                    <li class="left">
+                        <a href="/blog/about"
+                           onfocus="this.blur();"
+                           class="nav-about dark-btn block">
+                            About
+                        </a>
+                    </li>
+                
+                    <li class="right">
+                        <a href="/blog/archives"
+                           onfocus="this.blur();"
+                           class="nav-archives dark-btn block">
+                            Archives
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="shortcuts">
+        <a href="#header" class="top window-nav dark-btn" id="go-top">
+            <span class="icon icon-chevron-thin-up"></span>
+        </a>
+        <a class="close dark-btn" id="sidebar-close">
+            <span class="icon icon-close"></span>
+        </a>
+        <a href="#footer" class="top window-nav dark-btn" id="go-bottom">
+            <span class="icon icon-chevron-thin-down"></span>
+        </a>
+    </div>
+
+</div>
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script>window.jQuery || document.write('<script src="/blog/js/jquery.min.js"><\/script>')</script>
+
+
+<script src="/blog/js/jquery.fitvids.js"></script>
+
+<script>
+  var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+  var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+  var ALGOLIA_API_KEY = "";
+  var ALGOLIA_APP_ID = "";
+  var ALGOLIA_INDEX_NAME = "";
+  var AZURE_SERVICE_NAME = "";
+  var AZURE_INDEX_NAME = "";
+  var AZURE_QUERY_KEY = "";
+  var SEARCH_SERVICE = "";
+  var universalSearchConfig = {};
+  if (SEARCH_SERVICE === 'google') {
+    universalSearchConfig = {
+      searchService: SEARCH_SERVICE,
+      apiKey: GOOGLE_CUSTOM_SEARCH_API_KEY,
+      engineId: GOOGLE_CUSTOM_SEARCH_ENGINE_ID,
+      imagePath: "/img/"
+    };
+  } else if (SEARCH_SERVICE === 'algolia') {
+    universalSearchConfig = {
+      searchService: SEARCH_SERVICE,
+      apiKey: ALGOLIA_API_KEY,
+      appId: ALGOLIA_APP_ID,
+      indexName: ALGOLIA_INDEX_NAME,
+      imagePath: "/img/"
+    };
+  } else if (SEARCH_SERVICE === 'azure') {
+    universalSearchConfig = {
+      searchService: SEARCH_SERVICE,
+      serviceName: AZURE_SERVICE_NAME,
+      indexName: AZURE_INDEX_NAME,
+      apiKey: AZURE_QUERY_KEY,
+      imagePath: "/img/"
+    };
+  }
+</script>
+
+<script src="/blog/js/app.js"></script>
+
+
+<script src="/blog/js/search.js"></script>
+
+
+
+
+
+<script>setLoadingBarProgress(100);</script>
+
+</body>
+</html>

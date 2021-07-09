@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    
+    <title>Android R 文件的优化 / Shrink R Plugin | 白茶馆</title>
+    <meta name="description" content="succlz13's blog."/>
+    <meta name="keywords" content="hexo, blog"/>
+    <meta name="HandheldFriendly" content="True"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="google-site-verification" content=""/>
+    <meta name="baidu-site-verification" content=""/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="referrer" content="no-referrer" />
+    <meta name="description" content="https:&#x2F;&#x2F;github.com&#x2F;succlz123&#x2F;android-shrink在 Android 体积优化中有个很有意思的点, 就是对 R 文件字段的内联, 这边记录下 R 文件的一些历史变更. R 的变更最早http:&#x2F;&#x2F;tools.android.com&#x2F;tips&#x2F;non-constant-fields当 App 与各个 lib 整合时，R 文件字段的实际值（必须是唯一的）可能会出现碰">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android R 文件的优化 &#x2F; Shrink R Plugin">
+<meta property="og:url" content="https://succlz123.github.io/blog/2021/07/08/yuque/Android%20R%20%E6%96%87%E4%BB%B6%E7%9A%84%E4%BC%98%E5%8C%96%20!%20Shrink%20R%20Plugin/index.html">
+<meta property="og:site_name" content="白茶馆">
+<meta property="og:description" content="https:&#x2F;&#x2F;github.com&#x2F;succlz123&#x2F;android-shrink在 Android 体积优化中有个很有意思的点, 就是对 R 文件字段的内联, 这边记录下 R 文件的一些历史变更. R 的变更最早http:&#x2F;&#x2F;tools.android.com&#x2F;tips&#x2F;non-constant-fields当 App 与各个 lib 整合时，R 文件字段的实际值（必须是唯一的）可能会出现碰">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2021/png/217034/1625804828405-de6ba2d7-0bf2-4f0e-976f-72698564fcca.png#align=left&display=inline&height=223&margin=%5Bobject%20Object%5D&name=image.png&originHeight=446&originWidth=1724&size=86476&status=done&style=none&width=862">
+<meta property="article:published_time" content="2021-07-08T19:55:54.000Z">
+<meta property="article:modified_time" content="2021-07-09T04:33:19.508Z">
+<meta property="article:author" content="succlz123">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2021/png/217034/1625804828405-de6ba2d7-0bf2-4f0e-976f-72698564fcca.png#align=left&display=inline&height=223&margin=%5Bobject%20Object%5D&name=image.png&originHeight=446&originWidth=1724&size=86476&status=done&style=none&width=862">
+    
+
+    <!-- Favicon -->
+    
+
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,700" rel="stylesheet">
+
+    
+<link rel="stylesheet" href="/blog/style.css">
+
+    <script>
+      function setLoadingBarProgress(num) {
+        document.getElementById('loading-bar').style.width = num + "%";
+      }
+    </script>
+
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+
+<body>
+
+<div id="loading-bar-wrapper">
+  <div id="loading-bar"></div>
+</div>
+
+<script>setLoadingBarProgress(20)</script>
+
+<div id="site-wrapper">
+
+    <header id="header">
+    <div id="header-wrapper" class="clearfix">
+        <a id="logo" href="/blog/">
+            <img src="/blog/img/logo.png" />
+            <span id="site-desc">
+                succlz13
+            </span>
+        </a>
+        <button id="site-nav-switch">
+            <span>
+                <svg height="24px" viewBox="0 -53 384 384" width="24px" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="m368 154.667969h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0" />
+                    <path
+                        d="m368 32h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0" />
+                    <path
+                        d="m368 277.332031h-352c-8.832031 0-16-7.167969-16-16s7.167969-16 16-16h352c8.832031 0 16 7.167969 16 16s-7.167969 16-16 16zm0 0" />
+                    </svg>
+            </span>
+        </button>
+    </div>
+</header>
+    <script>setLoadingBarProgress(40);</script>
+
+    <main id="main" role="main">
+        <article id="post-yuque/Android R 文件的优化 ! Shrink R Plugin"
+         class="post article white-box article-type-post"
+         itemscope itemprop="blogPost">
+    <h2 class="title">
+        <a href="/blog/2021/07/08/yuque/Android%20R%20%E6%96%87%E4%BB%B6%E7%9A%84%E4%BC%98%E5%8C%96%20!%20Shrink%20R%20Plugin/">
+            Android R 文件的优化 / Shrink R Plugin
+        </a>
+    </h2>
+    <time>
+        7月 9, 2021
+    </time>
+    <section class="content">
+        <div class="article-entry" itemprop="articleBody">
+            <p><a target="_blank" rel="noopener" href="https://github.com/succlz123/android-shrink">https://github.com/succlz123/android-shrink</a><br>在 Android 体积优化中有个很有意思的点, 就是对 R 文件字段的内联, 这边记录下 R 文件的一些历史变更.</p>
+<h1><span id="r-的变更">R 的变更</span></h1><h2><span id="最早">最早</span></h2><p><a target="_blank" rel="noopener" href="http://tools.android.com/tips/non-constant-fields">http://tools.android.com/tips/non-constant-fields</a><br>当 App 与各个 lib 整合时，R 文件字段的实际值（必须是唯一的）可能会出现碰撞。ADT 14 之前，所有这样的字段都是 final 的，导致所有的 lib 被使用的时候, App Module 必须编译他们的所有资源和相关 Java 代码。</p>
+<h4><span id="缺点">缺点</span></h4><ul>
+<li>构建速度非常慢</li>
+<li>阻碍了不包含源代码的 lib 项目的分发</li>
+</ul>
+<h4><span id="优点">优点</span></h4><ul>
+<li>字段不再是 final 的原因是意味着 jar 包可以只编译一次，并且能直接在其他项目中复用</li>
+<li>允许分发库项目的二进制版本（在 r15 出现）, 加快构建速度</li>
+</ul>
+<h2><span id="adt-14-每个-lib-都带-rjava">ADT 14+ / 每个 lib 都带 R.java</span></h2><p><strong>从 app 里的 R.java 变到 每个 lib 都生成各自的 R.java , Module 里的 R 的变量 不是 static final 常量了</strong></p>
+<ol>
+<li>因为每个模块一个 r 文件,那么就会有冲突问题, 所以需要做 R 文件检查, 这样导致了必须编译他们的所有资源和相关 Java 代码, 所以分开</li>
+<li>分开后, 如果还是常量的话, 那么冲突后再修改起来就太麻烦了, 直接用引用方式就好了</li>
+</ol>
+<h2><span id="android-gradle-330-直接生成-rclass">Android Gradle 3.3.0+ / 直接生成 R.class</span></h2><p><a target="_blank" rel="noopener" href="https://developer.android.com/studio/releases/gradle-plugin?hl=ru">https://developer.android.com/studio/releases/gradle-plugin?hl=ru</a></p>
+<blockquote>
+<p>Faster R class generation for library projects: Previously, the Android Gradle plugin would generate an R.java file for each of your project’s dependencies and then compile those R classes alongside your app’s other classes. The plugin now generates a JAR containing your app’s compiled R class directly, without first building intermediate R.java classes. This optimization may significantly improve build performance for projects that include many library subprojects and dependencies, and improve the indexing speed in Android Studio.</p>
+</blockquote>
+<p><strong>不生成 R.java 而是直接生成 R.class</strong><br>这个 R.class 生成后  /build/javac/debug/classes 里面</p>
+<h2><span id="android-gradle-360-减少重复的-r-文件生成">Android Gradle 3.6.0+ / 减少重复的 R 文件生成</span></h2><p>AGP 文档 / Simplified R class generation</p>
+<blockquote>
+<p>The Android Gradle plugin simplifies the compile classpath by generating only one R class for each library module in your project and sharing those R classes with other module dependencies. This optimization should result in faster builds, but it requires that you keep the following in mind:</p>
+<ul>
+<li>Because the compiler shares R classes with upstream module dependencies, it’s important that each module in your project uses a unique package name.</li>
+<li>The visibility of a library’s R class to other project dependencies is determined by the configuration used to include the library as a dependency. For example, if Library A includes Library B as an ‘api’ dependency, Library A and other libraries that depend on Library A have access to Library B’s R class. However, other libraries might not have access to Library B’s R class If Library A uses the <code>implementation</code> dependency configuration. To learn more, read about <a target="_blank" rel="noopener" href="https://developer.android.com/studio/build/dependencies?hl=ru#dependency_configurations">dependency configurations</a>.</li>
+</ul>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/objectbox/objectbox-java/issues/817">https://github.com/objectbox/objectbox-java/issues/817</a></p>
+<blockquote>
+<p>In 3.6 we started generating an R class per module and per AAR, and re-using them whenever possible (in libraries). That reduced the number of R classes from n^2 to linear. We still have to re-generate all R classes only at app level, since they need to use final resource IDs (in libraries they were non-final and mock values). To re-use these R classes we add them to the compile classpath, and this is why previously R classes would be visible to all consumers transitively, but now they’re only visible (at compile time) to consumers that have direct dependency on that module/AAR or the dependencies are “api” (transitive) and not “implementation”.</p>
+</blockquote>
+<p>上面 改用直接生成 R.class 后, 还有个问题<br>比如 module b 依赖 jar c  - app 依赖 module b , 那么  b 会生成 2 个 R.class , app 会生成 3 个  R.class,  3.6.0 的时候优化这个, 尽可能的重用<br>这里注意 3.6.0+ 修改后,   原来我们可能在别的模块里,也可能误调用到 别的 module 里的 R.id   现在这样之后就没这个问题了</p>
+<h2><span id="android-gradle-40-修改了-rclass-文件的生成位置">Android Gradle 4.0+ / 修改了 R.class 文件的生成位置</span></h2><p>在最新 gradle 4.0 里 看到的现象是</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>runtime_library_classes_jar</th>
+<th>compile_library_classes_jar</th>
+</tr>
+</thead>
+</table>
+<p>| module</p>
+<p>app-test/build/intermediates/ | /runtime_library_classes_jar/release/classes.jar</p>
+<p>没有 R.class 有 buildConfig.class | /compile_library_classes_jar/release/classes.jar</p>
+<p>带 R.class 的, 不过里面带的 R.class id 都是 0 1 2 3   之类的, 如果是数组,那么里面是还有值 |<br>| app | 没有这个文件夹 | 没有这个文件夹 |</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/217034/1625804828405-de6ba2d7-0bf2-4f0e-976f-72698564fcca.png#align=left&display=inline&height=223&margin=%5Bobject%20Object%5D&name=image.png&originHeight=446&originWidth=1724&size=86476&status=done&style=none&width=862" alt="image.png"></p>
+<blockquote>
+<p>现在 R.class 的位置</p>
+</blockquote>
+<p>不管是 app 还是 module, 里面的 R 都可以在 compile_and_runtime_not_namespaced_r_class_jar 找到</p>
+<blockquote>
+<p>编译时 AGP 对 R 文件的处理过程</p>
+</blockquote>
+<ol>
+<li>module 在 runtime 生成项目 class, 在 not_namespaced 里生成 R.class.jar</li>
+<li>然后 R.class.jar 和 项目 class 一起被打包到 compile_library_classes_jar 里</li>
+<li>然后 app 再根据 module 和依赖, 生成最终的 compile_and_runtime_not_namespaced_r_class_jar</li>
+</ol>
+<blockquote>
+<p>为什么要单独打包 R.class</p>
+</blockquote>
+<p>为了重用优化</p>
+<blockquote>
+<p>R.txt 在哪里</p>
+</blockquote>
+<p>每个 module 的会生成 R.txt 在 local_only_symbol_list 里.   app 的话 R.txt 在 runtime_symbol_list 里<br>app 同时还有 compile_symbol_list</p>
+<h1><span id="内联-r-文件">内联 R 文件</span></h1><h2><span id="为什么不用-proguard-的优化">为什么不用 proguard 的优化</span></h2><p>ProGuard 对 R 文件的混淆会发现也能删除很多 R$*.class，但是混淆会造成一个问题：混淆后不能通过反射来获取资源了。比如友盟统计分享等，就要求 R 文件不能混淆掉，否则会报错，我们常用的做法是开启混淆，但 keep 住 R 文件.</p>
+<h2><span id="实现思路">实现思路</span></h2><p>Gradle 4.0 以后是从 jar 里读取了 - 不涉及到 directory 操作</p>
+<ol>
+<li>从原来的 javac 下找 R.class   变成 从 app 的  compile_and_runtime_not_namespaced_r_class_jar/debug/R.jar 里找, 然后放入 map</li>
+<li>遍历 jar -&gt; 解压缩 -&gt; 修改对应的 id -&gt; 压缩回 jar (中间不涉及到  app 和 module 的 directory 的操作)</li>
+</ol>
+
+        </div>
+        <div class="article-tags tags">
+            
+        </div>
+    </section>
+</article>
+
+
+
+
+
+        <script>setLoadingBarProgress(60);</script>
+    </main>
+
+    <footer id="footer" class="clearfix">
+
+    
+
+    <div class="social-wrapper">
+        
+            
+                <a href="https://github.com/succlz123" class="social github"
+                   target="_blank" rel="external">
+                    <span class="icon icon-github"></span>
+                </a>
+            
+                <a href="/atom.xml" class="social rss"
+                   target="_blank" rel="external">
+                    <span class="icon icon-rss"></span>
+                </a>
+            
+        
+    </div>
+
+    <div class="theme-by">Theme <span class="codename">Memory</span> designed by <a href="https://artifact.me/"
+                                                                                    target="_blank">Art Chen</a>.
+    </div>
+    <div>&copy; <a href="/blog/">白茶馆</a></div>
+
+</footer>
+
+
+    <script>setLoadingBarProgress(80);</script>
+    <div class="overlay"></div>
+</div>
+
+<div class="site-sidebar" id="site-sidebar">
+
+    
+
+    <div class="sidebar-switch clearfix "
+         style="display: none">
+        <a class="dark-btn active" data-toggle="toc">
+            <span class="icon icon-list"></span>
+            <span class="text">Index</span>
+        </a>
+        <a class="dark-btn" data-toggle="bio">
+            <span class="icon icon-person"></span>
+            <span class="text">Bio</span>
+        </a>
+    </div>
+
+    <div class="site-toc "
+         style="display: none">
+        
+            <div class="no-index">No Index</div>
+        
+    </div>
+
+    <div class="site-bio show"
+         style="display: block">
+
+        <div class="about-me clearfix">
+            <div class="avatar">
+                <img src="/blog/img/avatar.png"/>
+            </div>
+            <div class="info">
+                <a class="name dark-btn" href="/blog/">
+                    succlz123
+                </a>
+            </div>
+            <div class="info">
+                <span class="item desc">
+                    
+                </span>
+            </div>
+        </div>
+
+        <div class="menu section">
+            <ul class="clearfix">
+                
+                    <li class="left">
+                        <a href="/blog/about"
+                           onfocus="this.blur();"
+                           class="nav-about dark-btn block">
+                            About
+                        </a>
+                    </li>
+                
+                    <li class="right">
+                        <a href="/blog/archives"
+                           onfocus="this.blur();"
+                           class="nav-archives dark-btn block">
+                            Archives
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="shortcuts">
+        <a href="#header" class="top window-nav dark-btn" id="go-top">
+            <span class="icon icon-chevron-thin-up"></span>
+        </a>
+        <a class="close dark-btn" id="sidebar-close">
+            <span class="icon icon-close"></span>
+        </a>
+        <a href="#footer" class="top window-nav dark-btn" id="go-bottom">
+            <span class="icon icon-chevron-thin-down"></span>
+        </a>
+    </div>
+
+</div>
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script>window.jQuery || document.write('<script src="/blog/js/jquery.min.js"><\/script>')</script>
+
+
+<script src="/blog/js/jquery.fitvids.js"></script>
+
+<script>
+  var GOOGLE_CUSTOM_SEARCH_API_KEY = "";
+  var GOOGLE_CUSTOM_SEARCH_ENGINE_ID = "";
+  var ALGOLIA_API_KEY = "";
+  var ALGOLIA_APP_ID = "";
+  var ALGOLIA_INDEX_NAME = "";
+  var AZURE_SERVICE_NAME = "";
+  var AZURE_INDEX_NAME = "";
+  var AZURE_QUERY_KEY = "";
+  var SEARCH_SERVICE = "";
+  var universalSearchConfig = {};
+  if (SEARCH_SERVICE === 'google') {
+    universalSearchConfig = {
+      searchService: SEARCH_SERVICE,
+      apiKey: GOOGLE_CUSTOM_SEARCH_API_KEY,
+      engineId: GOOGLE_CUSTOM_SEARCH_ENGINE_ID,
+      imagePath: "/img/"
+    };
+  } else if (SEARCH_SERVICE === 'algolia') {
+    universalSearchConfig = {
+      searchService: SEARCH_SERVICE,
+      apiKey: ALGOLIA_API_KEY,
+      appId: ALGOLIA_APP_ID,
+      indexName: ALGOLIA_INDEX_NAME,
+      imagePath: "/img/"
+    };
+  } else if (SEARCH_SERVICE === 'azure') {
+    universalSearchConfig = {
+      searchService: SEARCH_SERVICE,
+      serviceName: AZURE_SERVICE_NAME,
+      indexName: AZURE_INDEX_NAME,
+      apiKey: AZURE_QUERY_KEY,
+      imagePath: "/img/"
+    };
+  }
+</script>
+
+<script src="/blog/js/app.js"></script>
+
+
+<script src="/blog/js/search.js"></script>
+
+
+
+
+
+<script>setLoadingBarProgress(100);</script>
+
+</body>
+</html>
